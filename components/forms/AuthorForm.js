@@ -37,8 +37,11 @@ export default function AuthorForm({ obj }) {
         .then(() => router.push(`/author/${obj.firebaseKey}`));
     } else {
       const payload = { ...formInput, uid: user.uid };
-      createAuthor(payload).then(() => {
-        router.push('/authors');
+      createAuthor(payload).then(({ name }) => {
+        const patchPayload = { firebaseKey: name };
+        updateAuthor(patchPayload).then(() => {
+          router.push('/authors');
+        });
       });
     }
   };
@@ -50,7 +53,7 @@ export default function AuthorForm({ obj }) {
         <Form.Control
           type="text"
           placeholder="Enter Author's First Name"
-          name="title"
+          name="first_name"
           value={formInput.first_name}
           onChange={handleChange}
           required
@@ -60,7 +63,7 @@ export default function AuthorForm({ obj }) {
         <Form.Control
           type="text"
           placeholder="Enter Author's Last Name"
-          name="title"
+          name="last_name"
           value={formInput.last_name}
           onChange={handleChange}
           required
@@ -93,14 +96,14 @@ export default function AuthorForm({ obj }) {
       <Form.Check
         className="text-white mb-3"
         type="switch"
-        id="favoriteAuthor"
+        id="favorite"
         name="favorite"
         label="Favorite?"
         checked={formInput.favorite}
         onChange={(e) => {
           setFormInput((prevState) => ({
             ...prevState,
-            sale: e.target.checked,
+            favorite: e.target.checked,
           }));
         }}
       />
