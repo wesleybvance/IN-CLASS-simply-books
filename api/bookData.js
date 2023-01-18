@@ -16,6 +16,18 @@ const getBooks = (uid) => new Promise((resolve, reject) => {
     .catch((error) => reject(error));
 });
 
+const booksOnSale = (uid) => new Promise((resolve, reject) => {
+  axios.get(`${dbUrl}/books.json?orderBy="sale"&equalTo="true"`)
+    .then((response) => {
+      if (response.data) {
+        resolve(Object.values(response.data));
+      } else {
+        resolve([]);
+      }
+    })
+    .catch((error) => reject(error));
+});
+
 const deleteBook = (firebaseKey) => new Promise((resolve, reject) => {
   axios.delete(`${dbUrl}/books/${firebaseKey}.json`)
     .then(() => resolve('deleted'))
